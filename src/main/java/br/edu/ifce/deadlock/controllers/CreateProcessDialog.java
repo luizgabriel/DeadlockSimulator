@@ -27,12 +27,16 @@ public class CreateProcessDialog implements Initializable {
 
     @FXML
     public void onClickSave() {
-        ProcessInfo process = new ProcessInfo(
-                nameTextField.getText(),
-                Integer.parseInt(dtsTextField.getText()),
-                Integer.parseInt(dtuTextField.getText())
-        );
+        String name = nameTextField.getText();
 
-        eventBus.post(new ProcessCreatedEvent(process));
+        if (!name.isEmpty()) {
+            ProcessInfo process = new ProcessInfo(name,
+                    Integer.parseInt(dtsTextField.getText()),
+                    Integer.parseInt(dtuTextField.getText())
+            );
+
+            eventBus.post(new ProcessCreatedEvent(process));
+        }
+
     }
 }

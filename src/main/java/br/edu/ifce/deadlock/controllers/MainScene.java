@@ -1,6 +1,7 @@
 package br.edu.ifce.deadlock.controllers;
 
 import br.edu.ifce.deadlock.DeadlockApplication;
+import br.edu.ifce.deadlock.events.OSDeltaTimeUpdated;
 import br.edu.ifce.deadlock.events.ProcessCreatedEvent;
 import br.edu.ifce.deadlock.events.ProcessRemovedEvent;
 import br.edu.ifce.deadlock.events.ResourceCreatedEvent;
@@ -13,6 +14,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 
 import javax.inject.Inject;
@@ -29,6 +31,9 @@ public class MainScene implements Initializable {
 
     @FXML
     private TableView processesTable, resourcesTable;
+
+    @FXML
+    private TextField osDeltaTimeTextField;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -74,6 +79,11 @@ public class MainScene implements Initializable {
     @FXML
     public void onClickCreateResource() {
         navigator.openCreateResourceDialog();
+    }
+
+    @FXML void onClickUpdateOSDeltaTime() {
+        int time = Integer.parseInt(osDeltaTimeTextField.getText());
+        eventBus.post(new OSDeltaTimeUpdated(time));
     }
 
     @Subscribe

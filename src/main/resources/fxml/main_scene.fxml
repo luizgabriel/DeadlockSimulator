@@ -1,71 +1,89 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.control.Menu?>
-<?import javafx.scene.control.MenuBar?>
-<?import javafx.scene.control.MenuItem?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox prefHeight="400.0" prefWidth="640.0" xmlns="http://javafx.com/javafx/8.0.131" xmlns:fx="http://javafx.com/fxml/1"
-      fx:controller="br.edu.ifce.deadlock.controllers.MainScene">
+<VBox prefHeight="400.0" prefWidth="640.0" xmlns="http://javafx.com/javafx/8.0.131" xmlns:fx="http://javafx.com/fxml/1" fx:controller="br.edu.ifce.deadlock.controllers.MainScene">
     <children>
-        <MenuBar VBox.vgrow="NEVER">
-            <menus>
-                <Menu mnemonicParsing="false" text="Simulação">
-                    <items>
-                        <MenuItem onAction="#onClickCreateResource" mnemonicParsing="false" text="Criar Recurso"/>
-                        <MenuItem onAction="#onClickCreateProcess" mnemonicParsing="false" text="Criar Processo"/>
-                    </items>
-                </Menu>
-            </menus>
-        </MenuBar>
+      <HBox prefHeight="54.0" prefWidth="640.0">
+         <children>
+            <Button mnemonicParsing="false" onAction="#onClickCreateResource" text="Criar Recurso" />
+            <Button mnemonicParsing="false" onAction="#onClickCreateProcess" text="Criar Processo">
+               <HBox.margin>
+                  <Insets left="5.0" />
+               </HBox.margin>
+            </Button>
+            <HBox alignment="CENTER_RIGHT" prefHeight="100.0" prefWidth="200.0" HBox.hgrow="ALWAYS">
+               <children>
+                  <Label alignment="CENTER_RIGHT" text="ΔT Do Sistema Operacional:" textAlignment="RIGHT">
+                     <HBox.margin>
+                        <Insets right="10.0" top="5.0" />
+                     </HBox.margin>
+                  </Label>
+                  <TextField fx:id="osDeltaTimeTextField" alignment="CENTER_RIGHT" value="5" prefHeight="27.0" prefWidth="116.0" />
+                  <Button mnemonicParsing="false" onAction="#onClickUpdateOSDeltaTime" text="Atualizar" />
+               </children>
+            </HBox>
+         </children>
+         <padding>
+            <Insets bottom="5.0" left="10.0" right="10.0" top="5.0" />
+         </padding>
+      </HBox>
         <VBox VBox.vgrow="ALWAYS">
             <children>
                 <HBox prefHeight="183.0" prefWidth="640.0" VBox.vgrow="ALWAYS">
                     <children>
                         <TableView fx:id="resourcesTable" prefHeight="183.0" prefWidth="319.0" HBox.hgrow="ALWAYS">
+                            <placeholder>
+                                <Label>Clique em "Criar Recurso" para adicionar um novo recurso.</Label>
+                            </placeholder>
                             <columns>
-                                <TableColumn prefWidth="163.0" text="Recurso"/>
-                                <TableColumn prefWidth="62.0" text="Qtd."/>
+                                <TableColumn prefWidth="163.0" text="Recurso" />
+                                <TableColumn prefWidth="62.0" text="Qtd." />
                             </columns>
                         </TableView>
                         <TableView fx:id="processesTable" prefHeight="153.0" prefWidth="383.0" HBox.hgrow="ALWAYS">
+                            <placeholder>
+                                <Label>Clique em "Criar Processo" para adicionar um novo processo.</Label>
+                            </placeholder>
                             <columns>
-                                <TableColumn prefWidth="75.0" text="Processo"/>
-                                <TableColumn prefWidth="75.0" text="ΔTs"/>
-                                <TableColumn prefWidth="75.0" text="ΔTu"/>
-                                <TableColumn prefWidth="75.0" text="Excluir"/>
+                                <TableColumn prefWidth="75.0" text="Processo" />
+                                <TableColumn prefWidth="75.0" text="ΔTs" />
+                                <TableColumn prefWidth="75.0" text="ΔTu" />
+                                <TableColumn prefWidth="75.0" text="Excluir" />
                             </columns>
                             <HBox.margin>
-                                <Insets left="10.0"/>
+                                <Insets left="10.0" />
                             </HBox.margin>
                         </TableView>
                     </children>
                     <padding>
-                        <Insets bottom="10.0" left="10.0" right="10.0" top="10.0"/>
+                        <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
                     </padding>
                 </HBox>
                 <Label text="Tabela de Eventos do Sistema Operacional">
                     <VBox.margin>
-                        <Insets left="10.0"/>
+                        <Insets left="10.0" />
                     </VBox.margin>
                 </Label>
                 <HBox prefHeight="191.0" prefWidth="640.0" VBox.vgrow="ALWAYS">
                     <children>
                         <TableView fx:id="eventsTable" prefHeight="183.0" prefWidth="200.0" HBox.hgrow="ALWAYS">
                             <columns>
-                                <TableColumn prefWidth="75.0" text="Processo"/>
-                                <TableColumn prefWidth="75.0" text="Recurso"/>
-                                <TableColumn prefWidth="234.0" text="Tempo de uso"/>
+                                <TableColumn prefWidth="75.0" text="Processo" />
+                                <TableColumn prefWidth="75.0" text="Recurso" />
+                                <TableColumn prefWidth="234.0" text="Tempo de uso" />
                             </columns>
                         </TableView>
                     </children>
                     <padding>
-                        <Insets bottom="10.0" left="10.0" right="10.0" top="10.0"/>
+                        <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
                     </padding>
                 </HBox>
             </children>

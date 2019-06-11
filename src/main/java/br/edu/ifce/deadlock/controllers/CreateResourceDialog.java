@@ -27,7 +27,11 @@ public class CreateResourceDialog implements Initializable {
 
     @FXML
     public void onClickSave() {
-        ResourceInfo resource = new ResourceInfo(nameTextField.getText(), Integer.parseInt(qtdTextField.getText()));
-        eventBus.post(new ResourceCreatedEvent(resource));
+        String name = nameTextField.getText();
+
+        if (!name.isEmpty()) {
+            ResourceInfo resource = new ResourceInfo(name, Integer.parseInt(qtdTextField.getText()));
+            eventBus.post(new ResourceCreatedEvent(resource));
+        }
     }
 }
