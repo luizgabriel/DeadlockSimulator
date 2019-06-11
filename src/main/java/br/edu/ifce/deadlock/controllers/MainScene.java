@@ -62,6 +62,7 @@ public class MainScene implements Initializable {
         pRemoveCol.setCellFactory(ActionButtonTableCell.<ProcessInfo>forTableColumn("Remover", (ProcessInfo p) -> {
             processesTable.getItems().remove(p);
             eventBus.post(new ProcessRemovedEvent(p));
+            return p;
         }));
     }
 
