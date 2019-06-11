@@ -59,7 +59,7 @@ public class MainScene implements Initializable {
         pDtuCol.setCellValueFactory(new PropertyValueFactory<ProcessInfo, Integer>("dtu"));
 
         TableColumn pRemoveCol = (TableColumn) processesTable.getColumns().get(3);
-        pRemoveCol.setCellFactory(ActionButtonTableCell.forTableColumn("Remover", (ProcessInfo p) -> {
+        pRemoveCol.setCellFactory(ActionButtonTableCell.<ProcessInfo>forTableColumn("Remover", (ProcessInfo p) -> {
             processesTable.getItems().remove(p);
             eventBus.post(new ProcessRemovedEvent(p));
         }));
