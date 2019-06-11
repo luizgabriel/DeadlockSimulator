@@ -1,4 +1,4 @@
-package br.edu.ifce.deadlock.ui;
+package br.edu.ifce.deadlock.utils;
 
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -11,7 +11,7 @@ public final class Component {
 
     public static Parent load(String name) throws IOException {
         FXMLLoader loader = new FXMLLoader();
-        loader.setLocation(Component.getResource(String.format("fxml/%s", name)));
+        loader.setLocation(Component.getResource(String.format("fxml/%s.fxml", name)));
         return loader.load();
     }
 

@@ -10,14 +10,15 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox prefHeight="400.0" prefWidth="640.0" xmlns="http://javafx.com/javafx/8.0.131" xmlns:fx="http://javafx.com/fxml/1"  fx:controller="br.edu.ifce.deadlock.ui.MainScene">
+<VBox prefHeight="400.0" prefWidth="640.0" xmlns="http://javafx.com/javafx/8.0.131" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="br.edu.ifce.deadlock.controllers.MainScene">
     <children>
-        <MenuBar VBox.vgrow="NEVER" fx:id="menuBar">
+        <MenuBar VBox.vgrow="NEVER">
             <menus>
                 <Menu mnemonicParsing="false" text="Simulação">
                     <items>
-                        <MenuItem onAction="#onClickCreateResource" mnemonicParsing="false" text="Criar Recurso" />
-                        <MenuItem onAction="#onClickCreateProcess" mnemonicParsing="false" text="Criar Processo" />
+                        <MenuItem onAction="#onClickCreateResource" mnemonicParsing="false" text="Criar Recurso"/>
+                        <MenuItem onAction="#onClickCreateProcess" mnemonicParsing="false" text="Criar Processo"/>
                     </items>
                 </Menu>
             </menus>
@@ -26,45 +27,45 @@
             <children>
                 <HBox prefHeight="183.0" prefWidth="640.0" VBox.vgrow="ALWAYS">
                     <children>
-                        <TableView prefHeight="183.0" prefWidth="319.0" HBox.hgrow="ALWAYS">
+                        <TableView fx:id="resourcesTable" prefHeight="183.0" prefWidth="319.0" HBox.hgrow="ALWAYS">
                             <columns>
-                                <TableColumn prefWidth="163.0" text="Recurso" />
-                                <TableColumn prefWidth="62.0" text="Qtd." />
+                                <TableColumn prefWidth="163.0" text="Recurso"/>
+                                <TableColumn prefWidth="62.0" text="Qtd."/>
                             </columns>
                         </TableView>
-                        <TableView prefHeight="153.0" prefWidth="383.0" HBox.hgrow="ALWAYS">
+                        <TableView fx:id="processesTable" prefHeight="153.0" prefWidth="383.0" HBox.hgrow="ALWAYS">
                             <columns>
-                                <TableColumn prefWidth="75.0" text="Processo" />
-                                <TableColumn prefWidth="75.0" text="ΔTs" />
-                                <TableColumn prefWidth="75.0" text="ΔTu" />
-                                <TableColumn prefWidth="75.0" text="Excluir" />
+                                <TableColumn prefWidth="75.0" text="Processo"/>
+                                <TableColumn prefWidth="75.0" text="ΔTs"/>
+                                <TableColumn prefWidth="75.0" text="ΔTu"/>
+                                <TableColumn prefWidth="75.0" text="Excluir"/>
                             </columns>
                             <HBox.margin>
-                                <Insets left="10.0" />
+                                <Insets left="10.0"/>
                             </HBox.margin>
                         </TableView>
                     </children>
                     <padding>
-                        <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                        <Insets bottom="10.0" left="10.0" right="10.0" top="10.0"/>
                     </padding>
                 </HBox>
                 <Label text="Tabela de Eventos do Sistema Operacional">
                     <VBox.margin>
-                        <Insets left="10.0" />
+                        <Insets left="10.0"/>
                     </VBox.margin>
                 </Label>
                 <HBox prefHeight="191.0" prefWidth="640.0" VBox.vgrow="ALWAYS">
                     <children>
-                        <TableView prefHeight="183.0" prefWidth="200.0" HBox.hgrow="ALWAYS">
+                        <TableView fx:id="eventsTable" prefHeight="183.0" prefWidth="200.0" HBox.hgrow="ALWAYS">
                             <columns>
-                                <TableColumn prefWidth="75.0" text="Processo" />
-                                <TableColumn prefWidth="75.0" text="Recurso" />
-                                <TableColumn prefWidth="234.0" text="Tempo de uso" />
+                                <TableColumn prefWidth="75.0" text="Processo"/>
+                                <TableColumn prefWidth="75.0" text="Recurso"/>
+                                <TableColumn prefWidth="234.0" text="Tempo de uso"/>
                             </columns>
                         </TableView>
                     </children>
                     <padding>
-                        <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                        <Insets bottom="10.0" left="10.0" right="10.0" top="10.0"/>
                     </padding>
                 </HBox>
             </children>
