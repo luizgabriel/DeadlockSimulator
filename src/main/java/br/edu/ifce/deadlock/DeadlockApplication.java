@@ -1,6 +1,6 @@
 package br.edu.ifce.deadlock;
 
-import br.edu.ifce.deadlock.ui.MainScene;
+import br.edu.ifce.deadlock.ui.Component;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
@@ -15,8 +15,7 @@ public class DeadlockApplication extends Application {
 
     @Override
     public void start(Stage primaryStage) throws IOException {
-        MainScene main = new MainScene();
-        primaryStage.setScene(new Scene(main.getRoot()));
+        primaryStage.setScene(new Scene(Component.load("main_scene.fxml")));
         primaryStage.setMaximized(true);
         primaryStage.setTitle("IFCE .:: DETECTOR DE DEADLOCK");
         primaryStage.show();
