@@ -16,4 +16,13 @@ public class ResourceInfo {
     public int getQtd() {
         return qtd;
     }
+
+    public void subtractQtd() {
+        qtd--;
+    }
+
+    public void incrementQtd() {
+        qtd++;
+    }
 }
+

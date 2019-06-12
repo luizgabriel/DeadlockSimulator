@@ -1,7 +1,6 @@
 package br.edu.ifce.deadlock.controllers;
 
-import br.edu.ifce.deadlock.events.EventBus;
-import br.edu.ifce.deadlock.events.ProcessCreatedEvent;
+import br.edu.ifce.deadlock.ApplicationManager;
 import br.edu.ifce.deadlock.models.ProcessInfo;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -31,7 +30,7 @@ public class CreateProcessDialog implements Initializable {
                     Integer.parseInt(dtuTextField.getText())
             );
 
-            EventBus.getInstance().dispatch(new ProcessCreatedEvent(process));
+            ApplicationManager.getInstance().addProcess(process);
         }
 
     }

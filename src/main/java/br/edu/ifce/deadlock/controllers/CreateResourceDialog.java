@@ -1,7 +1,6 @@
 package br.edu.ifce.deadlock.controllers;
 
-import br.edu.ifce.deadlock.events.EventBus;
-import br.edu.ifce.deadlock.events.ResourceCreatedEvent;
+import br.edu.ifce.deadlock.ApplicationManager;
 import br.edu.ifce.deadlock.models.ResourceInfo;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -25,8 +24,12 @@ public class CreateResourceDialog implements Initializable {
         String name = nameTextField.getText();
 
         if (!name.isEmpty()) {
-            ResourceInfo resource = new ResourceInfo(name, Integer.parseInt(qtdTextField.getText()));
-            EventBus.getInstance().dispatch(new ResourceCreatedEvent(resource));
+            try {
+                ResourceInfo resource = new ResourceInfo(name, Integer.parseInt(qtdTextField.getText()));
+                ApplicationManager.getInstance().addResource(resource);
+            } catch (NumberFormatException e) {
+                e.printStackTrace();
+            }
         }
     }
 }
