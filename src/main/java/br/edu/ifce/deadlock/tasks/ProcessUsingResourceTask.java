@@ -23,9 +23,9 @@ public class ProcessUsingResourceTask implements Runnable {
 
     @Override
     public void run() {
-        eventBus.dispatch(new ProcessUpdatedStatus(holder.getProcess(), "Utilizando o recurso " + holder.getResourceName()));
-
         while (!holder.hasFinished() && parent.isRunning()) {
+            eventBus.dispatch(new ProcessUpdatedStatus(holder.getProcess(), "Utilizando o recurso " + holder.getResourceName()));
+
             try {
                 Thread.sleep(1000);
             } catch (InterruptedException e) {
