@@ -8,7 +8,6 @@ import br.edu.ifce.deadlock.models.ResourceInfo;
 
 import java.util.ArrayList;
 import java.util.ConcurrentModificationException;
-import java.util.concurrent.Semaphore;
 
 public class ProcessTask implements Runnable {
     private ProcessInfo process;
@@ -19,14 +18,11 @@ public class ProcessTask implements Runnable {
     private final ArrayList<ResourceAllocation> resourcesAllocations;
     private int waitTime;
 
-    private Semaphore mutex;
-
     public ProcessTask(ProcessInfo process) {
         this.process = process;
         this.resourcesAllocations = new ArrayList<>();
         this.running = true;
         this.waitTime = 0;
-        this.mutex = new Semaphore(1);
 
         this.manager = ApplicationManager.getInstance();
         this.eventBus = EventBus.getInstance();
@@ -75,12 +71,6 @@ public class ProcessTask implements Runnable {
     private void updateResourcesAllocationsTable() {
         ArrayList<ResourceAllocation> toRemove = new ArrayList<>();
 
-        try {
-            mutex.acquire();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-
         for (ResourceAllocation holder : resourcesAllocations) {
             holder.incrementUsageTime();
 
@@ -90,7 +80,6 @@ public class ProcessTask implements Runnable {
             }
         }
         resourcesAllocations.removeAll(toRemove);
-        mutex.release();
 
         if (resourcesAllocations.size() > 0) {
             eventBus.dispatch(new ProcessUpdatedStatus(process, String.format("Utilizando %d recursos ", resourcesAllocations.size())));
@@ -98,20 +87,11 @@ public class ProcessTask implements Runnable {
     }
 
     private void clear() {
-        try {
-            mutex.acquire();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-
         for (ResourceAllocation holder : resourcesAllocations) {
             manager.releaseResource(holder);
         }
 
         resourcesAllocations.clear();
-
-        mutex.release();
-
         eventBus.dispatch(new RefreshData());
     }
 
