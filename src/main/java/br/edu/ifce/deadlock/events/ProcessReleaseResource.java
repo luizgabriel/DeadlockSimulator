@@ -1,18 +1,16 @@
 package br.edu.ifce.deadlock.events;
 
-import br.edu.ifce.deadlock.models.ProcessInfo;
-import br.edu.ifce.deadlock.models.ProcessWithResource;
-import br.edu.ifce.deadlock.models.ResourceInfo;
+import br.edu.ifce.deadlock.models.ResourceAllocation;
 
 public class ProcessReleaseResource {
 
-    private final ProcessWithResource processWithResource;
+    private final ResourceAllocation resourceAllocation;
 
-    public ProcessReleaseResource(ProcessWithResource processWithResource) {
-        this.processWithResource = processWithResource;
+    public ProcessReleaseResource(ResourceAllocation resourceAllocation) {
+        this.resourceAllocation = resourceAllocation;
     }
 
-    public ProcessWithResource getProcessWithResource() {
-        return processWithResource;
+    public ResourceAllocation getResourceAllocation() {
+        return resourceAllocation;
     }
 }

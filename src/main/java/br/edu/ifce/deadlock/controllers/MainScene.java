@@ -3,7 +3,6 @@ package br.edu.ifce.deadlock.controllers;
 import br.edu.ifce.deadlock.ApplicationManager;
 import br.edu.ifce.deadlock.events.*;
 import br.edu.ifce.deadlock.models.ProcessInfoWithStatus;
-import br.edu.ifce.deadlock.models.ProcessWithResource;
 import br.edu.ifce.deadlock.models.ResourceInfo;
 import br.edu.ifce.deadlock.navigation.Navigator;
 import com.google.common.base.Joiner;
@@ -49,7 +48,7 @@ public class MainScene implements Initializable {
         rNameCol.setCellValueFactory(new PropertyValueFactory<ResourceInfo, String>("name"));
 
         TableColumn rQtdCol = (TableColumn) resourcesTable.getColumns().get(1);
-        rQtdCol.setCellValueFactory(new PropertyValueFactory<ResourceInfo, Integer>("qtd"));
+        rQtdCol.setCellValueFactory(new PropertyValueFactory<ResourceInfo, Integer>("qtdText"));
     }
 
     private void setupProcessTableColumns() {
@@ -67,6 +66,7 @@ public class MainScene implements Initializable {
 
         TableColumn pRemoveCol = (TableColumn) processesTable.getColumns().get(4);
         pRemoveCol.setCellFactory(ActionButtonTableCell.forTableColumn("X", (ProcessInfoWithStatus p) -> {
+            processesTable.getItems().remove(p);
             ApplicationManager.getInstance().removeProcess(p.getProcessInfo());
             return p;
         }));
@@ -119,7 +119,7 @@ public class MainScene implements Initializable {
     @Subscribe
     public void onProcessAcquiredResource(ProcessAcquiredResource event) {
         Platform.runLater(() -> {
-            eventsTable.getItems().add(event.getProcessWithResource());
+            eventsTable.getItems().add(event.getResourceAllocation());
             resourcesTable.refresh();
         });
     }
@@ -127,13 +127,8 @@ public class MainScene implements Initializable {
     @Subscribe
     void onProcessReleasedResource(ProcessReleaseResource event) {
         Platform.runLater(() -> {
-            for (Object o : eventsTable.getItems()) {
-                ProcessWithResource p = (ProcessWithResource) o;
-                if (event.getProcessWithResource().getHandle() == p.getHandle()) {
-                    eventsTable.getItems().remove(p);
-                    return;
-                }
-            }
+            eventsTable.getItems().remove(event.getResourceAllocation());
+            resourcesTable.refresh();
         });
     }
 
@@ -144,11 +139,6 @@ public class MainScene implements Initializable {
             processesTable.refresh();
             resourcesTable.refresh();
         });
-    }
-
-    @Subscribe
-    void onProcessRemoved(ProcessRemovedEvent event) {
-        processesTable.getItems().remove(event.getProcess());
     }
 
     @Subscribe

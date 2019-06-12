@@ -2,14 +2,14 @@ package br.edu.ifce.deadlock.models;
 
 import java.util.UUID;
 
-public class ProcessWithResource {
+public class ResourceAllocation {
 
     private final int handle;
     private final ProcessInfo process;
     private final ResourceInfo resource;
     private int usageTime;
 
-    public ProcessWithResource(ProcessInfo process, ResourceInfo resource) {
+    public ResourceAllocation(ProcessInfo process, ResourceInfo resource) {
         this.handle = UUID.randomUUID().hashCode();
         this.process = process;
         this.resource = resource;
@@ -50,5 +50,10 @@ public class ProcessWithResource {
 
     public boolean hasFinished() {
         return getUsageTime() >= getProcess().getDtu();
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        return getHandle() == ((ResourceAllocation) obj).getHandle();
     }
 }

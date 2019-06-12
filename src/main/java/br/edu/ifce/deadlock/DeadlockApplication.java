@@ -21,7 +21,7 @@ public class DeadlockApplication extends Application {
         primaryStage.setTitle("IFCE .:: DETECTOR DE DEADLOCK");
         primaryStage.show();
 
-        Thread osThread = new Thread(new OSSimulationTask(1));
+        Thread osThread = new Thread(new OSSimulationTask(20));
         osThread.start();
     }
 

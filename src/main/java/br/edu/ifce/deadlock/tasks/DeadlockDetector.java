@@ -2,51 +2,63 @@ package br.edu.ifce.deadlock.tasks;
 
 import br.edu.ifce.deadlock.events.*;
 import br.edu.ifce.deadlock.models.ProcessInfo;
+import br.edu.ifce.deadlock.models.ResourceInfo;
 import com.google.common.eventbus.Subscribe;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 public class DeadlockDetector {
 
+    private final EventBus eventBus;
+    private final Map<ResourceInfo, List<ProcessInfo>> blocked;
+
     public DeadlockDetector() {
-        EventBus.getInstance().subscribe(this);
+        blocked = new HashMap<>();
+        eventBus = EventBus.getInstance();
+
+        eventBus.subscribe(this);
     }
 
     public void check() {
-        List<ProcessInfo> processes = new ArrayList<>();
+        List<ProcessInfo> processesInDeadlock = new ArrayList<>();
 
-        //processes.add(new ProcessInfo("A", 0, 0));
-        //processes.add(new ProcessInfo("B", 0, 0));
-        //processes.add(new ProcessInfo("C", 0, 0));
+        for (Map.Entry<ResourceInfo, List<ProcessInfo>> e: blocked.entrySet()) {
+            if (e.getValue().size() > 1) {
+                processesInDeadlock.addAll(e.getValue());
+            }
+        }
 
-        if (processes.size() > 0)
-            EventBus.getInstance().dispatch(new DeadlockDetectedEvent(processes));
-    }
-
-    @Subscribe
-    public void onProcessAdded(ProcessCreatedEvent event) {
-        //
-    }
-
-    @Subscribe
-    public void onProcessRemoved(ProcessRemovedEvent event) {
-        //
-    }
-
-    @Subscribe
-    public void onProcessAcquiredResource(ProcessAcquiredResource event) {
-        //
-    }
-
-    @Subscribe
-    public void onProcessReleasedEvent(ProcessReleaseResource event) {
-        //
+        if (processesInDeadlock.size() > 1)
+            eventBus.dispatch(new DeadlockDetectedEvent(processesInDeadlock));
     }
 
     @Subscribe
     public void onProcessBlocked(ProcessBlockedEvent event) {
-        //
+        if (blocked.containsKey(event.getResourceTried())) {
+            blocked.get(event.getResourceTried()).add(event.getProcess());
+        } else {
+            List<ProcessInfo> list = new ArrayList<>();
+            list.add(event.getProcess());
+
+            blocked.put(event.getResourceTried(), list);
+        }
+    }
+
+    @Subscribe
+    public void onRemovedProcess(ProcessRemovedEvent event) {
+        for (List<ProcessInfo> processes: blocked.values()) {
+            processes.remove(event.getProcess());
+        }
+    }
+
+    @Subscribe
+    public void onAcquireResource(ProcessAcquiredResource event) {
+        ResourceInfo resource = event.getResourceAllocation().getResource();
+        ProcessInfo process = event.getResourceAllocation().getProcess();
+
+        if (blocked.containsKey(resource)) {
+            blocked.get(resource).remove(process);
+        }
     }
 
 }

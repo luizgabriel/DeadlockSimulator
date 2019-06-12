@@ -25,10 +25,17 @@ public class OSSimulationTask implements Runnable {
     @Override
     public void run() {
         while (true) {
-            try {
-                Thread.sleep(deltaTime * 1000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
+
+            int time = 0;
+            while (time < deltaTime) {
+
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+
+                time += 1;
             }
 
             deadlockDetector.check();

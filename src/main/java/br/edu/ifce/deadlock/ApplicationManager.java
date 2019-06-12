@@ -2,7 +2,7 @@ package br.edu.ifce.deadlock;
 
 import br.edu.ifce.deadlock.events.*;
 import br.edu.ifce.deadlock.models.ProcessInfo;
-import br.edu.ifce.deadlock.models.ProcessWithResource;
+import br.edu.ifce.deadlock.models.ResourceAllocation;
 import br.edu.ifce.deadlock.models.ResourceInfo;
 import br.edu.ifce.deadlock.tasks.ProcessTask;
 
@@ -52,7 +52,7 @@ public class ApplicationManager {
 
     public void addResource(ResourceInfo resource) {
         this.resources.add(resource);
-        this.resourcesSemaphores.put(resource, new Semaphore(resource.getQtd()));
+        this.resourcesSemaphores.put(resource, new Semaphore(resource.getTotalQtd()));
 
         eventBus.dispatch(new ResourceCreatedEvent(resource));
     }
@@ -64,7 +64,7 @@ public class ApplicationManager {
         return instance;
     }
 
-    public ProcessWithResource requestResource(ProcessInfo process, ResourceInfo resource) {
+    public ResourceAllocation requestResource(ProcessInfo process, ResourceInfo resource) {
         Semaphore semaphore = this.resourcesSemaphores.get(resource);
 
         if (semaphore.availablePermits() == 0) {
@@ -79,18 +79,18 @@ public class ApplicationManager {
             e.printStackTrace();
         }
 
-        ProcessWithResource processWithResource = new ProcessWithResource(process, resource);
-        eventBus.dispatch(new ProcessAcquiredResource(processWithResource));
+        ResourceAllocation resourceAllocation = new ResourceAllocation(process, resource);
+        eventBus.dispatch(new ProcessAcquiredResource(resourceAllocation));
 
-        return processWithResource;
+        return resourceAllocation;
     }
 
-    public void releaseResource(ProcessWithResource processWithResource) {
-        Semaphore semaphore = this.resourcesSemaphores.get(processWithResource.getResource());
+    public void releaseResource(ResourceAllocation resourceAllocation) {
+        Semaphore semaphore = this.resourcesSemaphores.get(resourceAllocation.getResource());
         semaphore.release();
-        processWithResource.getResource().incrementQtd();
+        resourceAllocation.getResource().incrementQtd();
 
-        eventBus.dispatch(new ProcessReleaseResource(processWithResource));
+        eventBus.dispatch(new ProcessReleaseResource(resourceAllocation));
     }
 
     public void removeProcess(ProcessInfo processInfo) {
@@ -102,4 +102,5 @@ public class ApplicationManager {
             eventBus.dispatch(new ProcessRemovedEvent(processInfo));
         }
     }
+
 }

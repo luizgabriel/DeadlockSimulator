@@ -62,7 +62,7 @@
                                 <Label>Clique em "Criar Processo" para adicionar um novo processo.</Label>
                             </placeholder>
                             <columns>
-                                <TableColumn prefWidth="163.0" text="Processo"/>
+                                <TableColumn prefWidth="100.0" text="Processo"/>
                                 <TableColumn prefWidth="75.0" text="ΔTs (s)"/>
                                 <TableColumn prefWidth="75.0" text="ΔTu (s)"/>
                                 <TableColumn prefWidth="300.0" text="Status"/>
