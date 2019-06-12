@@ -47,4 +47,8 @@ public class ProcessWithResource {
     public String getResourceName() {
         return resource.getName();
     }
+
+    public boolean hasFinished() {
+        return getUsageTime() >= getProcess().getDtu();
+    }
 }

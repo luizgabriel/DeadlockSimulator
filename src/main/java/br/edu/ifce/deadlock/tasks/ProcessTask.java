@@ -39,21 +39,13 @@ public class ProcessTask implements Runnable {
             ResourceInfo resource = manager.getRandomResource();
             if (resource != null) {
                 ProcessWithResource holder = manager.requestResource(process, resource);
-                eventBus.dispatch(new ProcessUpdatedStatus(process, "Utilizando o recurso " + resource.getName()));
-
-                while (holder.getUsageTime() < process.getDtu()) {
-                    try {
-                        Thread.sleep(1000);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-
-                    holder.incrementUsageTime();
-                    eventBus.dispatch(new RefreshData());
-                }
-
-                manager.releaseResource(holder);
+                Thread request = new Thread(new ProcessUsingResourceTask(this, holder));
+                request.run();
             }
         }
+    }
+
+    public boolean isRunning () {
+        return this.running;
     }
 }

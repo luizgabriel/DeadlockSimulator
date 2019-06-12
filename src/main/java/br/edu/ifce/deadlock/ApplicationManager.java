@@ -67,8 +67,10 @@ public class ApplicationManager {
     public ProcessWithResource requestResource(ProcessInfo process, ResourceInfo resource) {
         Semaphore semaphore = this.resourcesSemaphores.get(resource);
 
-        if (semaphore.availablePermits() == 0)
+        if (semaphore.availablePermits() == 0) {
             eventBus.dispatch(new ProcessBlockedEvent(process, resource));
+            eventBus.dispatch(new ProcessUpdatedStatus(process, "Processo bloqueado ao solicitar " + resource.getName()));
+        }
 
         try {
             semaphore.acquire();
@@ -92,9 +94,12 @@ public class ApplicationManager {
     }
 
     public void removeProcess(ProcessInfo processInfo) {
-        this.processTasks.get(processInfo).stop();
-        this.processTasks.remove(processInfo);
+        ProcessTask task = processTasks.get(processInfo);
+        if (task != null) {
+            task.stop();
+            processTasks.remove(processInfo);
 
-        eventBus.dispatch(new ProcessRemovedEvent(processInfo));
+            eventBus.dispatch(new ProcessRemovedEvent(processInfo));
+        }
     }
 }
