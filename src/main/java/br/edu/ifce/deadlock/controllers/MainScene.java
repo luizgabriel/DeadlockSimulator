@@ -1,33 +1,26 @@
 package br.edu.ifce.deadlock.controllers;
 
 import br.edu.ifce.deadlock.DeadlockApplication;
-import br.edu.ifce.deadlock.events.OSDeltaTimeUpdated;
-import br.edu.ifce.deadlock.events.ProcessCreatedEvent;
-import br.edu.ifce.deadlock.events.ProcessRemovedEvent;
-import br.edu.ifce.deadlock.events.ResourceCreatedEvent;
+import br.edu.ifce.deadlock.events.*;
 import br.edu.ifce.deadlock.models.ProcessInfo;
 import br.edu.ifce.deadlock.models.ResourceInfo;
 import br.edu.ifce.deadlock.navigation.INavigator;
-import com.google.common.eventbus.EventBus;
+import br.edu.ifce.deadlock.navigation.Navigator;
+import com.google.common.base.Joiner;
 import com.google.common.eventbus.Subscribe;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Alert;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 
-import javax.inject.Inject;
 import java.net.URL;
 import java.util.ResourceBundle;
 
 public class MainScene implements Initializable {
-
-    @Inject
-    public INavigator navigator;
-
-    @Inject
-    public EventBus eventBus;
 
     @FXML
     private TableView processesTable, resourcesTable;
@@ -35,14 +28,19 @@ public class MainScene implements Initializable {
     @FXML
     private TextField osDeltaTimeTextField;
 
+    private Alert deadlockAlert;
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        DeadlockApplication.getAppComponent().inject(this);
-        eventBus.register(this);
+        EventBus.getInstance().subscribe(this);
         //menuBar.setUseSystemMenuBar(true);
 
         setupProcessTableColumns();
         setupResourcesTableColumns();
+
+        deadlockAlert = new Alert(Alert.AlertType.WARNING);
+        deadlockAlert.setTitle("DEADLOCK");
+        deadlockAlert.setHeaderText("O sistema operacional detectou um deadlock");
     }
 
     private void setupResourcesTableColumns() {
@@ -66,24 +64,40 @@ public class MainScene implements Initializable {
         TableColumn pRemoveCol = (TableColumn) processesTable.getColumns().get(3);
         pRemoveCol.setCellFactory(ActionButtonTableCell.forTableColumn("X", (ProcessInfo p) -> {
             processesTable.getItems().remove(p);
-            eventBus.post(new ProcessRemovedEvent(p));
+            EventBus.getInstance().dispatch(new ProcessRemovedEvent(p));
             return p;
         }));
     }
 
     @FXML
     public void onClickCreateProcess() {
-        navigator.openCreateProcessDialog();
+        Navigator.getInstance().openCreateProcessDialog();
     }
 
     @FXML
     public void onClickCreateResource() {
-        navigator.openCreateResourceDialog();
+        Navigator.getInstance().openCreateResourceDialog();
     }
 
-    @FXML void onClickUpdateOSDeltaTime() {
+    @FXML
+    void onClickUpdateOSDeltaTime() {
         int time = Integer.parseInt(osDeltaTimeTextField.getText());
-        eventBus.post(new OSDeltaTimeUpdated(time));
+        EventBus.getInstance().dispatch(new OSDeltaTimeUpdated(time));
+    }
+
+    @Subscribe
+    void onDeadlockDetected(DeadlockDetectedEvent event) {
+        Platform.runLater(() -> {
+            if (!deadlockAlert.isShowing()) {
+                deadlockAlert.setContentText("Processos envolvidos: " + Joiner.on(", ").join(event.getProcessesNames()));
+                deadlockAlert.showAndWait();
+            }
+        });
+    }
+
+    @Subscribe
+    void onChangeDeltaTime(OSDeltaTimeUpdated event) {
+        osDeltaTimeTextField.setText(String.valueOf(event.getTime()));
     }
 
     @Subscribe
